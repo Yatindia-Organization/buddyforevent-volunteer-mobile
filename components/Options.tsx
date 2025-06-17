@@ -8,7 +8,7 @@ import {
     View,
 } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
-import { useGlobalInfo } from '../context/GlobalContext'; // ← NEW
+import { useGlobalInfo } from '../context/GlobalContext';
 import {
     checkFoodStatus,
     giveGift,
@@ -17,15 +17,21 @@ import {
 } from '../services/api';
 
 interface OptionsProps {
-    data: string;
+    data: {
+        entryTime: string | null;
+        exitTime: string | null;
+        foodTime: string | null;
+        giftTime: string | null;
+        food: any;
+        gift: any;
+        foodCount: number | null;
+        qrcode: string;
+    };
 }
 
 const Options: React.FC<OptionsProps> = ({ data }) => {
-    /* ---------- read limit from global store ---------- */
-    const { maxChoices = 5 } = useGlobalInfo();               // default 5
-
-    /* Generate ["1","2",…] once, memoised */
-    const numericItems = useMemo(
+    const { maxChoices = 5 } = useGlobalInfo();
+    const dropdownItems = useMemo(
         () =>
             Array.from({ length: maxChoices }, (_, i) => ({
                 label: `${i + 1}`,
@@ -34,20 +40,23 @@ const Options: React.FC<OptionsProps> = ({ data }) => {
         [maxChoices]
     );
 
-    /* ---------- entry modal state ---------- */
     const [entryModalVisible, setEntryModalVisible] = useState(false);
     const [entryOpen, setEntryOpen] = useState(false);
     const [visitorCount, setVisitorCount] = useState<string | null>('1');
 
-    /* ---------- food modal state ---------- */
     const [foodModalVisible, setFoodModalVisible] = useState(false);
     const [foodOpen, setFoodOpen] = useState(false);
-    const [foodUnits, setFoodUnits] = useState<string | null>('1');  // numeric
+    const [foodUnits, setFoodUnits] = useState<string | null>('1');
 
-    /* ---------- handlers ---------- */
+    // Button disable logic
+    const isEntryDone = !!data.entryTime;
+    const isExitDone = !!data.exitTime;
+    const isGiftDone = !!data.giftTime || !!data.gift;
+    const isFoodDone = !!data.foodTime || !!data.foodCount;
+
     const submitEntry = async () => {
         try {
-            const res = await validateEntry(data, visitorCount!);
+            const res = await validateEntry(data.qrcode, visitorCount!);
             Alert.alert('Entry', res.message);
         } catch {
             Alert.alert('Error', 'Entry failed.');
@@ -57,7 +66,7 @@ const Options: React.FC<OptionsProps> = ({ data }) => {
 
     const submitFood = async () => {
         try {
-            const res = await checkFoodStatus(data, foodUnits!);
+            const res = await checkFoodStatus(data.qrcode, foodUnits!);
             Alert.alert('Food', res.message);
         } catch {
             Alert.alert('Error', 'Food check failed.');
@@ -67,8 +76,8 @@ const Options: React.FC<OptionsProps> = ({ data }) => {
 
     const handleExit = async () => {
         try {
-            const res = await logExit(data);
-            Alert.alert('Visitor Exit', res.message);
+            const res = await logExit(data.qrcode);
+            Alert.alert('Exit', res.message);
         } catch {
             Alert.alert('Error', 'Exit failed.');
         }
@@ -76,33 +85,52 @@ const Options: React.FC<OptionsProps> = ({ data }) => {
 
     const handleGift = async () => {
         try {
-            const res = await giveGift(data);
-            Alert.alert('Gift Received', res.message);
+            const res = await giveGift(data.qrcode);
+            Alert.alert('Gift', res.message);
         } catch {
             Alert.alert('Error', 'Gift failed.');
         }
     };
 
-    /* ---------- UI ---------- */
     return (
         <View style={styles.container}>
-            <TouchableOpacity style={styles.button} onPress={() => setEntryModalVisible(true)}>
+            {/* ENTRY */}
+            <TouchableOpacity
+                style={[styles.button, isEntryDone && styles.disabled]}
+                disabled={isEntryDone}
+                onPress={() => setEntryModalVisible(true)}
+            >
                 <Text style={styles.buttonText}>Record Entry</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={handleExit}>
+            {/* EXIT */}
+            <TouchableOpacity
+                style={[styles.button, isExitDone && styles.disabled]}
+                disabled={isExitDone}
+                onPress={handleExit}
+            >
                 <Text style={styles.buttonText}>Record Exit</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={handleGift}>
+            {/* GIFT */}
+            <TouchableOpacity
+                style={[styles.button, isGiftDone && styles.disabled]}
+                disabled={isGiftDone}
+                onPress={handleGift}
+            >
                 <Text style={styles.buttonText}>Gift</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.button} onPress={() => setFoodModalVisible(true)}>
+            {/* FOOD */}
+            <TouchableOpacity
+                style={[styles.button, isFoodDone && styles.disabled]}
+                disabled={isFoodDone}
+                onPress={() => setFoodModalVisible(true)}
+            >
                 <Text style={styles.buttonText}>Food</Text>
             </TouchableOpacity>
 
-            {/* -------- ENTRY modal -------- */}
+            {/* ENTRY MODAL */}
             <Modal
                 visible={entryModalVisible}
                 transparent
@@ -112,18 +140,16 @@ const Options: React.FC<OptionsProps> = ({ data }) => {
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalContent}>
                         <Text style={styles.modalTitle}>Select number of visitors</Text>
-
                         <DropDownPicker
                             open={entryOpen}
                             value={visitorCount}
-                            items={numericItems}            // ← uses global limit
+                            items={dropdownItems}
                             setOpen={setEntryOpen}
                             setValue={setVisitorCount}
                             containerStyle={[styles.dropdownContainer, { zIndex: 2000 }]}
                             style={styles.dropdown}
                             dropDownContainerStyle={styles.dropdownList}
                         />
-
                         <ModalButtons
                             onSubmit={submitEntry}
                             onCancel={() => setEntryModalVisible(false)}
@@ -132,7 +158,7 @@ const Options: React.FC<OptionsProps> = ({ data }) => {
                 </View>
             </Modal>
 
-            {/* -------- FOOD modal -------- */}
+            {/* FOOD MODAL */}
             <Modal
                 visible={foodModalVisible}
                 transparent
@@ -142,18 +168,16 @@ const Options: React.FC<OptionsProps> = ({ data }) => {
                 <View style={styles.modalOverlay}>
                     <View style={styles.modalContent}>
                         <Text style={styles.modalTitle}>Select food quantity</Text>
-
                         <DropDownPicker
                             open={foodOpen}
                             value={foodUnits}
-                            items={numericItems}            // ← same numeric list
+                            items={dropdownItems}
                             setOpen={setFoodOpen}
                             setValue={setFoodUnits}
                             containerStyle={[styles.dropdownContainer, { zIndex: 3000 }]}
                             style={styles.dropdown}
                             dropDownContainerStyle={styles.dropdownList}
                         />
-
                         <ModalButtons
                             onSubmit={submitFood}
                             onCancel={() => setFoodModalVisible(false)}
@@ -167,7 +191,7 @@ const Options: React.FC<OptionsProps> = ({ data }) => {
 
 export default Options;
 
-/* ---------- tiny sub-component to reuse submit/cancel buttons ---------- */
+// Shared button group
 const ModalButtons = ({
     onSubmit,
     onCancel,
@@ -188,7 +212,6 @@ const ModalButtons = ({
     </View>
 );
 
-/* ------------- styles ------------- */
 const styles = StyleSheet.create({
     container: { padding: 16 },
     button: {
@@ -197,13 +220,16 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         marginBottom: 12,
     },
+    disabled: {
+        backgroundColor: '#cccccc',
+        opacity: 0.6,
+    },
     buttonText: {
         color: '#fff',
         textAlign: 'center',
         fontWeight: '500',
         fontSize: 16,
     },
-    /* modal */
     modalOverlay: {
         flex: 1,
         backgroundColor: 'rgba(0,0,0,0.5)',

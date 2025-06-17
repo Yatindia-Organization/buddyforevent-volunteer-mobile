@@ -9,8 +9,8 @@ export const loginUser = async (email: string, password: string) => {
     return res.json();
 };
 
-export const validateEntry = async (qrCode: string) => {
-    const res = await fetch(`${API_ROUTE}/api/v1/event/handleQR/scan/${qrCode}&visitor=4?action=entry`, {
+export const validateEntry = async (qrCode: string, visitor: string) => {
+    const res = await fetch(`${API_ROUTE}/api/v1/event/handleQR/scan/${qrCode}&visitor=${visitor}?action=entry`, {
         method: "POST",
         headers: { "Content-Type": "application/json" }
     });

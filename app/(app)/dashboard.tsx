@@ -17,8 +17,8 @@ const Dashboard: React.FC = () => {
     const [scanning, setScanning] = useState(false);
 
     const handleScannerDone = (data: any | null) => {
-        // if (data) changeQrData(data);
-        changeQrData("sbdasjdasdnkasdl")
+        if (data) changeQrData(data);
+        
         setScanning(false);
     };
 
