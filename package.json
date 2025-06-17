@@ -1,5 +1,5 @@
 {
-  "name": "buddyandroid",
+  "name": "BuddyForEvent",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {
@@ -17,8 +17,8 @@
     "@react-navigation/elements": "^2.3.8",
     "@react-navigation/native": "^7.1.6",
     "expo": "53.0.11",
-    "expo-barcode-scanner": "^13.0.1",
     "expo-blur": "~14.1.5",
+    "expo-camera": "~16.1.7",
     "expo-constants": "~17.1.6",
     "expo-document-picker": "~13.1.5",
     "expo-font": "~13.3.1",
