@@ -1,18 +1,18 @@
-import React, { useState } from "react";
-import {
-    View,
-    TextInput,
-    Text,
-    StyleSheet,
-    Image,
-    Animated,
-    Easing,
-    TouchableOpacity
-} from "react-native";
-import { Button } from 'react-native-paper';
 import { useGlobalInfo } from "@/context/GlobalContext";
 import { API_ROUTE } from "@/lib/config";
 import { router } from "expo-router";
+import React, { useState } from "react";
+import {
+    Animated,
+    Easing,
+    Image,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View
+} from "react-native";
+import { Button } from 'react-native-paper';
 
 
 export default function LoginScreen() {

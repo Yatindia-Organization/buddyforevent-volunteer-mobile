@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { View, ScrollView, Alert, StyleSheet } from 'react-native';
-import { Avatar, TextInput, Button, Card, Text } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import React, { useState } from 'react';
+import { Alert, ScrollView, StyleSheet, View } from 'react-native';
+import { Avatar, Button, Text, TextInput } from 'react-native-paper';
 
 export default function Profile() {
     const initialData = {
-        firstName: 'Yash',
-        lastName: 'Ghori',
-        email: 'yghori@asite.com',
-        phone: '9172048144030',
+        firstName: 'Volunteer',
+        lastName: '',
+        email: 'Volunteer@buddyforevent.com',
+        phone: '91720481XXXX',
         nationality: 'India',
-        designation: 'UI Intern',
+        designation: 'Volunteer',
     };
 
     const [formData, setFormData] = useState(initialData);

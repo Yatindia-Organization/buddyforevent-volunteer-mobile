@@ -1,7 +1,7 @@
-const BASE_URL = "https://your-api.com"; // Replace with your backend
+import { API_ROUTE } from "@/lib/config";
 
 export const loginUser = async (email: string, password: string) => {
-    const res = await fetch(`${BASE_URL}/login`, {
+    const res = await fetch(`${API_ROUTE}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -9,38 +9,34 @@ export const loginUser = async (email: string, password: string) => {
     return res.json();
 };
 
-export const validateEntry = async (qrData: string, visitorCount: string) => {
-    const res = await fetch(`${BASE_URL}/entry`, {
+export const validateEntry = async (qrCode: string) => {
+    const res = await fetch(`${API_ROUTE}/api/v1/event/handleQR/scan/${qrCode}&visitor=4?action=entry`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ qrData, visitorCount }),
+        headers: { "Content-Type": "application/json" }
     });
     return res.json();
 };
 
-export const logExit = async (qrData: string) => {
-    const res = await fetch(`${BASE_URL}/exit`, {
+export const logExit = async (qrCode: string) => {
+    const res = await fetch(`${API_ROUTE}/api/v1/event/handleQR/scan/${qrCode}?action=exit`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ qrData }),
+        headers: { "Content-Type": "application/json" }
     });
     return res.json();
 };
 
-export const giveGift = async (qrData: string) => {
-    const res = await fetch(`${BASE_URL}/gift`, {
+export const giveGift = async (qrCode: string) => {
+    const res = await fetch(`${API_ROUTE}/api/v1/event/handleQR/scan/${qrCode}?action=gift`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ qrData }),
+        headers: { "Content-Type": "application/json" }
     });
     return res.json();
 };
 
-export const checkFoodStatus = async (qrData: string) => {
-    const res = await fetch(`${BASE_URL}/food`, {
+export const checkFoodStatus = async (qrCode: string, visitorCount: string) => {
+    const res = await fetch(`${API_ROUTE}/api/v1/event/handleQR/scan/${qrCode}?action=food&count=${visitorCount}`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ qrData }),
+        headers: { "Content-Type": "application/json" }
     });
     return res.json();
 };

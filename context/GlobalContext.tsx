@@ -16,6 +16,9 @@ type GlobalContextType = {
 
     event: string;
     changeEvent: (newState: string) => void;
+
+    qrData: any;
+    changeQrData: (newState: any) => void;
 };
 
 // Create the context with an optional default value
@@ -37,6 +40,7 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
     const [userType, setUserType] = useState<string>("admin");
     const [userId, setUserId] = useState<string | null>("");
     const [event, setEvent] = useState<string>("");
+    const [qrData, setQrData] = useState<any>([])
 
     const value: GlobalContextType = {
         isLoggedIn,
@@ -53,6 +57,9 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
 
         event,
         changeEvent: setEvent,
+
+        qrData,
+        changeQrData: setQrData
     };
 
     return (
