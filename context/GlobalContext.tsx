@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
 
-// Define the shape of your global context
 type GlobalContextType = {
     isLoggedIn: boolean;
     changeIsLoggedIn: (newState: boolean) => void;
@@ -19,12 +18,13 @@ type GlobalContextType = {
 
     qrData: any;
     changeQrData: (newState: any) => void;
+
+    theme: "light" | "dark";
+    setTheme: (newTheme: "light" | "dark") => void;
 };
 
-// Create the context with an optional default value
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
 
-// Custom hook to use global context
 export function useGlobalInfo() {
     const context = useContext(GlobalContext);
     if (!context) {
@@ -33,14 +33,14 @@ export function useGlobalInfo() {
     return context;
 }
 
-// Context provider component
 export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loginFlow, setLoginFlow] = useState(true);
     const [userType, setUserType] = useState<string>("admin");
     const [userId, setUserId] = useState<string | null>("");
     const [event, setEvent] = useState<string>("");
-    const [qrData, setQrData] = useState<any>([])
+    const [qrData, setQrData] = useState<any>([]);
+    const [theme, setTheme] = useState<"light" | "dark">("light"); 
 
     const value: GlobalContextType = {
         isLoggedIn,
@@ -59,7 +59,10 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
         changeEvent: setEvent,
 
         qrData,
-        changeQrData: setQrData
+        changeQrData: setQrData,
+
+        theme,
+        setTheme,
     };
 
     return (
