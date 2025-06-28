@@ -24,9 +24,9 @@ export default function Scanner({ onDone }: Props) {
             if (!res.ok) throw new Error('invalid');
 
             const json = await res.json();
-            console.log(json, "this is the JSON ");
+            console.log(json.data, "this is the JSON ");
 
-            onDone(json);
+            onDone(json.data);
         } catch {
             Alert.alert('QR is invalid', 'Please try again.');
             isProcessing.current = false;
