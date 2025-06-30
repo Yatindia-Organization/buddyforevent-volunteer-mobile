@@ -1,8 +1,7 @@
-import { useGlobalInfo } from "@/context/GlobalContext";
-import { API_ROUTE } from "@/lib/config";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import {
+    ActivityIndicator,
     Animated,
     Easing,
     Image,
@@ -10,20 +9,21 @@ import {
     Text,
     TextInput,
     TouchableOpacity,
-    View
+    View,
 } from "react-native";
-import { Button } from 'react-native-paper';
+import { Colors } from "../../constants/Colors";
+import { useGlobalInfo } from "../../context/GlobalContext";
+import { API_ROUTE } from "../../lib/config";
 
-
-export default function LoginScreen() {
+const LoginScreen: React.FC = () => {
+    const { theme, changeIsLoggedIn, changeUserType, changeUserId } = useGlobalInfo();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
     const [snackbarVisible, setSnackbarVisible] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState("");
+    const [loading, setLoading] = useState(false);
     const slideAnim = useState(new Animated.Value(-100))[0];
-
-    const { changeIsLoggedIn, changeUserType, changeUserId } = useGlobalInfo();
 
     const showTopSnackbar = (message: string) => {
         setSnackbarMessage(message);
@@ -61,7 +61,7 @@ export default function LoginScreen() {
 
     const handleLogin = async () => {
         if (!validateInputs()) return;
-
+        setLoading(true);
         try {
             const response = await fetch(`${API_ROUTE}/api/v1/auth/sign-in`, {
                 method: "POST",
@@ -77,17 +77,14 @@ export default function LoginScreen() {
             const data = await response.json();
 
             if (response.ok) {
-
                 const userTypeFromApi = data?.data?.existingUser?.user_type;
 
                 if (userTypeFromApi) {
-                    // Update global context
                     changeUserType(userTypeFromApi);
                     changeIsLoggedIn(true);
                     changeUserId(data?.data?.existingUser?._id);
 
                     router.replace("/dashboard");
-
                 } else {
                     showTopSnackbar("User type not found. Cannot continue.");
                 }
@@ -98,78 +95,114 @@ export default function LoginScreen() {
         } catch (error) {
             console.error("Login error:", error);
             showTopSnackbar("An error occurred. Please try again.");
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { backgroundColor: Colors[theme].background }]}>
             <View style={styles.header}>
                 <Image
                     source={require('../../assets/images/logo-company.png')}
                     style={styles.logo}
                 />
-                <Text style={styles.title}>Buddyforevent</Text>
+                <Text style={[styles.title, { color: Colors[theme].text }]}>Buddyforevent</Text>
             </View>
 
             <TextInput
                 placeholder="Email"
-                style={styles.input}
+                placeholderTextColor={Colors[theme].secondaryText}
+                style={[
+                    styles.input,
+                    {
+                        backgroundColor: Colors[theme].dropdownBackground,
+                        borderColor: Colors[theme].secondaryText,
+                        color: Colors[theme].text
+                    }
+                ]}
                 autoCapitalize="none"
                 value={email}
                 onChangeText={(text) => {
                     setEmail(text);
                     if (errors.email) setErrors((e) => ({ ...e, email: undefined }));
                 }}
+                editable={!loading}
             />
             {errors.email && <Text style={styles.error}>{errors.email}</Text>}
 
             <TextInput
                 placeholder="Password"
+                placeholderTextColor={Colors[theme].secondaryText}
                 secureTextEntry
-                style={styles.input}
+                style={[
+                    styles.input,
+                    {
+                        backgroundColor: Colors[theme].dropdownBackground,
+                        borderColor: Colors[theme].secondaryText,
+                        color: Colors[theme].text
+                    }
+                ]}
                 value={password}
                 onChangeText={(text) => {
                     setPassword(text);
                     if (errors.password) setErrors((e) => ({ ...e, password: undefined }));
                 }}
+                editable={!loading}
             />
             {errors.password && <Text style={styles.error}>{errors.password}</Text>}
 
             <TouchableOpacity
                 onPress={() => router.push("/forgot-password")}
                 style={styles.forgotPasswordContainer}
+                disabled={loading}
             >
-                <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+                <Text style={[styles.forgotPasswordText, { color: Colors[theme].button }]}>
+                    Forgot Password?
+                </Text>
             </TouchableOpacity>
 
-            <Button
-                mode="contained"
+            <TouchableOpacity
+                style={[
+                    styles.button,
+                    { backgroundColor: Colors[theme].button, opacity: loading ? 0.7 : 1 }
+                ]}
                 onPress={handleLogin}
-                style={styles.loginButton}
-                labelStyle={styles.loginButtonLabel}
-            // loading={loading}
+                disabled={loading}
             >
-                Login
-            </Button>
-
+                {loading ? (
+                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                        <ActivityIndicator size="small" color={Colors[theme].buttonText} style={{ marginRight: 8 }} />
+                        <Text style={[styles.buttonText, { color: Colors[theme].buttonText }]}>
+                            Logging in...
+                        </Text>
+                    </View>
+                ) : (
+                    <Text style={[styles.buttonText, { color: Colors[theme].buttonText }]}>
+                        Login
+                    </Text>
+                )}
+            </TouchableOpacity>
 
             {snackbarVisible && (
                 <Animated.View
-                    style={[styles.snackbar, { transform: [{ translateY: slideAnim }] }]}
+                    style={[
+                        styles.snackbar,
+                        { transform: [{ translateY: slideAnim }] }
+                    ]}
                 >
                     <Text style={styles.snackbarText}>{snackbarMessage}</Text>
                 </Animated.View>
             )}
         </View>
     );
-}
+};
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: "center",
         padding: 20,
-        backgroundColor: "#fff",
     },
     header: {
         alignItems: "center",
@@ -187,14 +220,12 @@ const styles = StyleSheet.create({
     },
     input: {
         borderWidth: 1,
-        borderColor: "#ccc",
         padding: 12,
         marginBottom: 15,
         borderRadius: 5,
-        backgroundColor: "#fff",
     },
     error: {
-        color: "red",
+        color: "#e53935",
         marginBottom: 12,
     },
     forgotPasswordContainer: {
@@ -202,20 +233,19 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     forgotPasswordText: {
-        color: "#6200ee",
         fontSize: 14,
         fontWeight: "bold",
     },
-    loginButton: {
+    button: {
+        paddingVertical: 12,
+        borderRadius: 4,
+        marginBottom: 12,
         marginTop: 10,
-        paddingVertical: 8,
-        backgroundColor: "#000",
-        borderRadius: 6,
     },
-    loginButtonLabel: {
-        color: "#fff",
+    buttonText: {
+        textAlign: 'center',
+        fontWeight: '500',
         fontSize: 16,
-        fontWeight: "bold",
     },
     snackbar: {
         position: "absolute",
@@ -232,3 +262,5 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
 });
+
+export default LoginScreen;
