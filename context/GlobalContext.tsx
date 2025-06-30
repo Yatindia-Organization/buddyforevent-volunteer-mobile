@@ -1,4 +1,8 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { useColorScheme } from "react-native";
+
+type ThemeType = "light" | "dark";
+type ThemePreferenceType = "system" | "light" | "dark";
 
 type GlobalContextType = {
     isLoggedIn: boolean;
@@ -19,8 +23,11 @@ type GlobalContextType = {
     qrData: any;
     changeQrData: (newState: any) => void;
 
-    theme: "light" | "dark";
-    setTheme: (newTheme: "light" | "dark") => void;
+    theme: ThemeType;
+    setTheme: (newTheme: ThemeType) => void;
+
+    themePreference: ThemePreferenceType;
+    setThemePreference: (pref: ThemePreferenceType) => void;
 };
 
 const GlobalContext = createContext<GlobalContextType | undefined>(undefined);
@@ -40,8 +47,26 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
     const [userId, setUserId] = useState<string | null>("");
     const [event, setEvent] = useState<string>("");
     const [qrData, setQrData] = useState<any>([]);
-    const [theme, setTheme] = useState<"light" | "dark">("light"); 
+    const [themePreference, setThemePreference] = useState<ThemePreferenceType>("system"); 
+    const systemColorScheme = useColorScheme();
 
+    const [theme, setTheme] = useState<ThemeType>(
+        systemColorScheme === "dark" ? "dark" : "light"
+    );
+
+    useEffect(() => {
+        if (themePreference === "system") {
+            setTheme(systemColorScheme === "dark" ? "dark" : "light");
+        }
+    }, [systemColorScheme, themePreference]);
+
+    const handleSetTheme = (newTheme: ThemeType) => {
+        setThemePreference("custom"); 
+        setTheme(newTheme);
+        setThemePreference(newTheme); 
+    };
+
+    // Provide everything in context
     const value: GlobalContextType = {
         isLoggedIn,
         changeIsLoggedIn: setIsLoggedIn,
@@ -62,7 +87,10 @@ export const GlobalProvider = ({ children }: { children: React.ReactNode }) => {
         changeQrData: setQrData,
 
         theme,
-        setTheme,
+        setTheme: handleSetTheme, // use our custom handler
+
+        themePreference,
+        setThemePreference,
     };
 
     return (
