@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "buddyandroid",
-    "slug": "buddyandroid",
+    "name": "BuddyForEventScannerApp",
+    "slug": "BuddyForEventScannerApp",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "scheme": "buddyandroid",
+    "icon": "./assets/images/logo-company.png",
+    "scheme": "BuddyForEventScannerApp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -13,10 +13,14 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "foregroundImage": "./assets/images/logo-company.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "permissions": [
+        "android.permission.CAMERA"
+      ],
+      "package": "com.ganesh_ganesh.BuddyForEventScannerApp"
     },
     "web": {
       "bundler": "metro",
@@ -45,6 +49,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "edb5c97e-21ff-46ce-80cb-40121dd07885"
+      }
     }
   }
 }

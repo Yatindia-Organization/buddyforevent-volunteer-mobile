@@ -1,4 +1,4 @@
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+// import { MaterialCommunityIcons } from './expo/vector-icons';
 import React, { useState } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { Avatar, Button, Text, TextInput } from 'react-native-paper';
@@ -50,15 +50,15 @@ export default function Profile() {
 
                 <View style={styles.detailsSection}>
                     <View style={styles.detailsRow}>
-                        <MaterialCommunityIcons name="email-outline" size={20} />
+                        {/* <MaterialCommunityIcons name="email-outline" size={20} /> */}
                         <Text style={styles.detailsText}>{formData.email}</Text>
                     </View>
                     <View style={styles.detailsRow}>
-                        <MaterialCommunityIcons name="phone" size={20} />
+                        {/* <MaterialCommunityIcons name="phone" size={20} /> */}
                         <Text style={styles.detailsText}>{formData.phone}</Text>
                     </View>
                     <View style={styles.detailsRow}>
-                        <MaterialCommunityIcons name="flag-outline" size={20} />
+                        {/* <MaterialCommunityIcons name="flag-outline" size={20} /> */}
                         <Text style={styles.detailsText}>{formData.nationality}</Text>
                     </View>
                 </View>

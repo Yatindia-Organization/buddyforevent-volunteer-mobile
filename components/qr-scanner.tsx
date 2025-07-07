@@ -1,7 +1,7 @@
-import { API_ROUTE } from '@/lib/config';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useRef, useState } from 'react';
 import { Alert, Button, StyleSheet, View } from 'react-native';
+import { API_ROUTE } from '../lib/config';
 
 type Props = { onDone: (data: any | null) => void };
 
