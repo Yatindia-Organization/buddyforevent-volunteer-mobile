@@ -1,8 +1,8 @@
+import { Slot, useRouter, useSegments } from "expo-router";
 import React, { useEffect } from "react";
-import { View, ActivityIndicator } from "react-native";
-import { useRouter, useSegments, Slot } from "expo-router";
-import { useGlobalInfo } from "@/context/GlobalContext";
-import TopNavBar from "@/components/TopNavBar";
+import { ActivityIndicator, View } from "react-native";
+import TopNavBar from "../../components/TopNavBar";
+import { useGlobalInfo } from "../../context/GlobalContext";
 
 export default function AppLayout() {
   const { isLoggedIn } = useGlobalInfo();
@@ -21,9 +21,10 @@ export default function AppLayout() {
     //   }
     // }
     if (!isLoggedIn && segments[0] === "(app)") {
+      console.log(isLoggedIn, segments, router, "layout")
       setTimeout(() => {
         router.replace("/login");
-      }, 0);
+      }, 100);
     }
 
   }, [isLoggedIn, segments, router]);

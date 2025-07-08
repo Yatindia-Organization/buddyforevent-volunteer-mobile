@@ -1,14 +1,14 @@
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-    View,
+    KeyboardAvoidingView,
+    Platform,
+    StyleSheet,
     Text,
     TextInput,
     TouchableOpacity,
-    StyleSheet,
-    KeyboardAvoidingView,
-    Platform,
+    View,
 } from "react-native";
-import { useRouter } from "expo-router";
 
 export default function ResetPassword() {
     const [password, setPassword] = useState("");

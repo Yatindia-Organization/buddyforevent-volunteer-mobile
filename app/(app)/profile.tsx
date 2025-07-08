@@ -1,4 +1,3 @@
-// import { MaterialCommunityIcons } from './expo/vector-icons';
 import React, { useState } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { Avatar, Button, Text, TextInput } from 'react-native-paper';
