@@ -1,11 +1,13 @@
 {
   "expo": {
     "name": "BuddyForEventScannerApp",
-    "slug": "BuddyForEventScannerApp",
+    "slug": "buddyforeventscannerapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/logo-company.png",
-    "scheme": "BuddyForEventScannerApp",
+    "scheme": [
+      "buddyforeventscannerapp"
+    ],
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -45,7 +47,9 @@
           "microphonePermission": "Allow buddyandroid to access your microphone",
           "recordAudioAndroid": false
         }
-      ]
+      ],
+      "expo-font",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
@@ -53,7 +57,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "edb5c97e-21ff-46ce-80cb-40121dd07885"
+        "projectId": ""
       }
     }
   }

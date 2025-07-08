@@ -1,14 +1,14 @@
-import React, { useState, useRef } from "react";
+import { useRouter } from "expo-router";
+import React, { useRef, useState } from "react";
 import {
-    View,
+    KeyboardAvoidingView,
+    Platform,
+    StyleSheet,
     Text,
     TextInput,
     TouchableOpacity,
-    StyleSheet,
-    KeyboardAvoidingView,
-    Platform,
+    View,
 } from "react-native";
-import { useRouter } from "expo-router";
 
 export default function OtpVerify() {
     const [otp, setOtp] = useState(["", "", "", ""]);
@@ -17,7 +17,7 @@ export default function OtpVerify() {
 
     const router = useRouter();
 
-    const handleChange = (value, index) => {
+    const handleChange = (value: any, index: number) => {
         const newOtp = [...otp];
         newOtp[index] = value.slice(-1); // Only allow last character
         setOtp(newOtp);
@@ -70,7 +70,7 @@ export default function OtpVerify() {
                     {otp.map((digit, index) => (
                         <TextInput
                             key={index}
-                            ref={(ref) => (inputRefs.current[index] = ref)}
+                            ref={(ref: any) => (inputRefs.current[index] = ref)}
                             style={styles.otpInput}
                             keyboardType="number-pad"
                             maxLength={1}
