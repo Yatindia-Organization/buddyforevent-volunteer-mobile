@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Alert, ScrollView, StyleSheet, View } from 'react-native';
 import { Avatar, Button, Text, TextInput } from 'react-native-paper';
+import TopNavBar from '../components/TopNavBar';
 
 export default function Profile() {
     const initialData = {
@@ -40,6 +41,9 @@ export default function Profile() {
 
     return (
         <ScrollView contentContainerStyle={styles.container}>
+            <View>
+                <TopNavBar />
+            </View>
             <View style={styles.cardContainer}>
                 <View style={styles.header}>
                     <Avatar.Text size={80} label={`${formData.firstName[0]}${formData.lastName[0]}`} />
@@ -149,7 +153,7 @@ const styles = StyleSheet.create({
         fontSize: 22,
         fontWeight: '600',
         marginTop: 8,
-        color: '#333', 
+        color: '#333',
     },
     designation: {
         fontSize: 16,
@@ -178,12 +182,12 @@ const styles = StyleSheet.create({
     },
     input: {
         marginBottom: 12,
-        backgroundColor: '#fff', 
+        backgroundColor: '#fff',
     },
     saveButton: {
         marginTop: 16,
-        borderRadius: 6, 
-        backgroundColor: '#6200ee', 
+        borderRadius: 6,
+        backgroundColor: '#6200ee',
     },
     cancelButton: {
         marginTop: 8,
