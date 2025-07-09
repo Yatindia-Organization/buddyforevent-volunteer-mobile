@@ -8,15 +8,16 @@ import {
     View,
 } from 'react-native';
 import DropDownPicker from 'react-native-dropdown-picker';
-import Scanner from '../../components/qr-scanner';
-import { Colors } from "../../constants/Colors";
-import { useGlobalInfo } from '../../context/GlobalContext';
+import Scanner from '../components/qr-scanner';
+import TopNavBar from '../components/TopNavBar';
+import { Colors } from "../constants/Colors";
+import { useGlobalInfo } from '../context/GlobalContext';
 import {
     checkFoodStatus,
     giveGift,
     logExit,
     validateEntry,
-} from '../../services/api';
+} from '../services/api';
 
 const Dashboard: React.FC = () => {
     const { theme } = useGlobalInfo();
@@ -143,6 +144,9 @@ const Dashboard: React.FC = () => {
 
     return (
         <View style={{ flex: 1, backgroundColor: Colors[theme].background }}>
+            <View>
+                <TopNavBar />
+            </View>
             <View style={[
                 styles.topBar,
                 { borderBottomColor: Colors[theme].secondaryText }

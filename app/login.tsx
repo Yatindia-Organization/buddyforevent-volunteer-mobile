@@ -11,9 +11,9 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
-import { Colors } from "../../constants/Colors";
-import { useGlobalInfo } from "../../context/GlobalContext";
-import { API_ROUTE } from "../../lib/config";
+import { Colors } from "../constants/Colors";
+import { useGlobalInfo } from "../context/GlobalContext";
+import { API_ROUTE } from "../lib/config";
 
 const LoginScreen: React.FC = () => {
     const { theme, changeIsLoggedIn, changeUserType, changeUserId } = useGlobalInfo();
@@ -104,7 +104,7 @@ const LoginScreen: React.FC = () => {
         <View style={[styles.container, { backgroundColor: Colors[theme].background }]}>
             <View style={styles.header}>
                 <Image
-                    source={require('../../assets/images/logo-company.png')}
+                    source={require('../assets/images/logo-company.png')}
                     style={styles.logo}
                 />
                 <Text style={[styles.title, { color: Colors[theme].text }]}>Buddyforevent</Text>
